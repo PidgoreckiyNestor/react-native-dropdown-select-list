@@ -42,13 +42,14 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
         badgeTextStyles,
         checkBoxStyles,
         save = 'key',
-        dropdownShown = false
+        dropdownShown = false,
+    selectedStringsArray=[]
     }) => {
 
     const oldOption = React.useRef(null)
     const [_firstRender,_setFirstRender] = React.useState<boolean>(true);
     const [dropdown, setDropdown] = React.useState<boolean>(dropdownShown);
-    const [selectedval, setSelectedVal] = React.useState<any>([]);
+    const [selectedval, setSelectedVal] = React.useState<any>(selectedStringsArray);
     const [height,setHeight] = React.useState<number>(350)
     const animatedvalue = React.useRef(new Animated.Value(0)).current;
     const [filtereddata,setFilteredData] = React.useState(data);
@@ -56,21 +57,21 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
 
     const slidedown = () => {
         setDropdown(true)
-        
+
         Animated.timing(animatedvalue,{
             toValue:height,
             duration:500,
             useNativeDriver:false,
-            
+
         }).start()
     }
     const slideup = () => {
-        
+
         Animated.timing(animatedvalue,{
             toValue:0,
             duration:500,
             useNativeDriver:false,
-            
+
         }).start(() => setDropdown(false))
     }
 
@@ -79,7 +80,7 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
             setHeight(maxHeight)
     },[maxHeight])
 
-    
+
     React.useEffect(() => {
         setFilteredData(data);
       },[data])
@@ -91,7 +92,7 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
           return;
         }
         onSelect()
-        
+
     },[selectedval])
 
     React.useEffect(() => {
@@ -100,9 +101,9 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                 slidedown();
             else
                 slideup();
-            
+
         }
-        
+
     },[dropdownShown])
 
 
@@ -116,11 +117,11 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                 (dropdown && search)
                 ?
                     <View style={[styles.wrapper,boxStyles]}>
-                        <View style={{flexDirection:'row',alignItems:'center',flex:1}}> 
+                        <View style={{flexDirection:'row',alignItems:'center',flex:1}}>
                             {
                                 (!searchicon)
                                 ?
-                                <Image 
+                                <Image
                                     source={require('../assets/images/search.png')}
                                     resizeMode='contain'
                                     style={{width:20,height:20,marginRight:7}}
@@ -128,8 +129,8 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                 :
                                 searchicon
                             }
-                            
-                            <TextInput 
+
+                            <TextInput
                                 placeholder={searchPlaceholder}
                                 onChangeText={(val) => {
                                     let result =  data.filter((item: L1Keys) => {
@@ -148,7 +149,7 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                     {
                                         (!closeicon)
                                         ?
-                                            <Image 
+                                            <Image
                                                 source={require('../assets/images/close.png')}
                                                 resizeMode='contain'
                                                 style={{width:17,height:17}}
@@ -157,10 +158,10 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                             closeicon
                                     }
                                 </TouchableOpacity>
-                                
-                           
+
+
                         </View>
-                        
+
                     </View>
                 :
 
@@ -189,7 +190,7 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                         {
                             (!arrowicon)
                             ?
-                                <Image 
+                                <Image
                                     source={require('../assets/images/chevron.png')}
                                     resizeMode='contain'
                                     style={{width:20,height:20}}
@@ -197,10 +198,10 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                             :
                                 arrowicon
                         }
-                        
+
                     </TouchableOpacity>
             }
-            
+
             {
                 (dropdown)
                 ?
@@ -219,18 +220,18 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                             return(
                                                 <TouchableOpacity style={[styles.disabledoption,disabledItemStyles]} key={index}>
                                                     <View style={[{width:15,height:15,marginRight:10,borderRadius:3,justifyContent:'center',alignItems:'center',backgroundColor:'#c4c5c6'},disabledCheckBoxStyles]}>
-                                                        
+
                                                         {
                                                             (selectedval?.includes(value))
                                                             ?
-                                                                
-                                                                <Image 
+
+                                                                <Image
                                                                     key={index}
                                                                     source={require('../assets/images/check.png')}
                                                                     resizeMode='contain'
                                                                     style={[{width:8,height:8,paddingLeft:7}]}
                                                                 />
-                                                
+
                                                             :
                                                             null
 
@@ -243,7 +244,7 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                             return(
                                                 <TouchableOpacity style={[styles.option,dropdownItemStyles]} key={index} onPress={ () => {
 
-                                                    
+
                                                     let existing = selectedval?.indexOf(value)
 
 
@@ -252,16 +253,16 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                                     if(existing != -1  && existing != undefined){
 
                                                         let sv = [...selectedval];
-                                                        sv.splice(existing,1) 
+                                                        sv.splice(existing,1)
                                                         setSelectedVal(sv);
 
 
                                                         setSelected((val: any) => {
                                                             let temp = [...val];
-                                                            temp.splice(existing,1) 
+                                                            temp.splice(existing,1)
                                                             return temp;
                                                         });
-                                                        
+
                                                         // onSelect()
                                                     }else{
                                                         if(save === 'value'){
@@ -275,62 +276,62 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                                                 return temp;
                                                             })
                                                         }
-                                                       
+
                                                         setSelectedVal((val: any )=> {
                                                             let temp = [...new Set([...val,value])];
                                                             return temp;
                                                         })
-                                    
-                                                        
+
+
                                                         // onSelect()
                                                     }
-                                                    
-                                                    
-                                                    
+
+
+
                                                 }}>
                                                     <View style={[{width:15,height:15,borderWidth:1,marginRight:10,borderColor:'gray',borderRadius:3,justifyContent:'center',alignItems:'center'},checkBoxStyles]}>
-                                                        
+
                                                         {
                                                             (selectedval?.includes(value))
                                                             ?
-                                                                
-                                                                <Image 
+
+                                                                <Image
                                                                     key={index}
                                                                     source={require('../assets/images/check.png')}
                                                                     resizeMode='contain'
                                                                     style={{width:8,height:8,paddingLeft:7}}
                                                                 />
-                                                
+
                                                             :
                                                             null
 
                                                         }
-                                                            
 
-                                                        
-                                                        
+
+
+
                                                     </View>
                                                     <Text style={[{fontFamily},dropdownTextStyles]}>{value}</Text>
                                                 </TouchableOpacity>
                                             )
                                         }
-                                        
+
                                     })
                                     :
                                     <TouchableOpacity style={[styles.option,dropdownItemStyles]} onPress={ () => {
                                         setSelected(undefined)
                                         setSelectedVal("")
                                         slideup()
-                                        setTimeout(() => setFilteredData(data), 800)  
+                                        setTimeout(() => setFilteredData(data), 800)
                                     }}>
                                         <Text style={dropdownTextStyles}>{notFoundText}</Text>
                                     </TouchableOpacity>
                                 }
-                                
-                                
-                                
+
+
+
                             </ScrollView>
-                            
+
                                 {
                                     (selectedval?.length > 0)
                                     ?
@@ -340,7 +341,7 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                                 <View style={{height: 1, flex: 1, backgroundColor: 'gray'}} />
                                             </View>
                                             <View style={{flexDirection:'row',paddingHorizontal:20,marginBottom:20,flexWrap:'wrap'}}>
-                                            
+
                                                 {
                                                     selectedval?.map((item,index) => {
                                                         return (
@@ -356,17 +357,17 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                     :
                                     null
                                 }
-                                
-                                
-                            
+
+
+
                         </View>
-                       
+
                     </Animated.View>
                 :
                 null
             }
-            
-            
+
+
         </View>
     )
 }
